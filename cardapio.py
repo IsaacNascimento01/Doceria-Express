@@ -5,52 +5,60 @@ def limpar_tela():
     #IDENTIFICA O SISTEMA E LIMPA A TELA
     os.system('cls' if os.name == 'nt' else 'clear')
 
+def sabores_brigadeiros():
+    # Mostra o menu de opções na tela
+    print("\n=== CARDÁPIO DE SABORES ===")
+    print("[ 1 ] Tradicional de Chocolate \n[ 2 ] Tradicional de Ninho \n[ 3 ] Tradicional de Prestígio")
+    print("[ 4 ] Gourmet de Crocante de Amendoim \n[ 5 ] Gourmet de Mesclado \n[ 6 ] Gourmet de Café \n[ 7 ] Gourmet de Nesquik")
+    print("[ 8 ] Frutado de Maracujá \n[ 9 ] Frutado de Limão")
+    print("=" * 27)
+
+def escolha_sabores():
+    # Dicionário com os sabores mapeados pelo número
+    cardapio = {
+        "1": "Tradicional de Chocolate",
+        "2": "Tradicional de Ninho",
+        "3": "Tradicional de Prestígio",
+        "4": "Gourmet de Crocante de Amendoim",
+        "5": "Gourmet de Mesclado",
+        "6": "Gourmet de Café",
+        "7": "Gourmet de Nesquik",
+        "8": "Frutado de Maracujá",
+        "9": "Frutado de Limão"
+    }
+
+    sabores_brigadeiros()
+
+    sabores_escolhidos = []
+
+    print("\nVocê pode escolher até 4 sabores!")
+    sleep(2)
+    limpar_tela()
+
+
+    # O for roda exatamente 4 vezes (de 1 até 4)
+    for i in range(1, 5):
+        while True:
+            sabores_brigadeiros()
+            opcao = input(f"\nEscolha o {i}º sabor (digite o número): ")
+
+            # Verifica se o número digitado existe no cardápio
+            if opcao in cardapio:
+                sabor_nome = cardapio[opcao]
+                sabores_escolhidos.append(sabor_nome)
+                print(f"✅ {sabor_nome} adicionado!")
+                sleep(1)
+                limpar_tela()
+                break # Sai do 'while' e vai para a próxima repetição do 'for'
+            else:
+                print("❌ Opção inválida! Escolha um número de 1 a 9.")
+
+    return sabores_escolhidos
+
 def exibir_cardapio_completo():
-
-    def escolha_sabores():
-        # Dicionário com os sabores mapeados pelo número
-        cardapio = {
-            "1": "Tradicional de Chocolate",
-            "2": "Tradicional de Ninho",
-            "3": "Tradicional de Prestígio",
-            "4": "Gourmet de Crocante de Amendoim",
-            "5": "Gourmet de Mesclado",
-            "6": "Gourmet de Café",
-            "7": "Gourmet de Nesquik",
-            "8": "Frutado de Maracujá",
-            "9": "Frutado de Limão"
-        }
-
-        # Mostra o menu de opções na tela
-        print("\n=== CARDÁPIO DE SABORES ===")
-        print("[ 1 ] Tradicional de Chocolate \n[ 2 ] Tradicional de Ninho \n[ 3 ] Tradicional de Prestígio")
-        print("[ 4 ] Gourmet de Crocante de Amendoim \n[ 5 ] Gourmet de Mesclado \n[ 6 ] Gourmet de Café \n[ 7 ] Gourmet de Nesquik")
-        print("[ 8 ] Frutado de Maracujá \n[ 9 ] Frutado de Limão")
-        print("=" * 27)
-
-        sabores_escolhidos = []
-
-        print("\nVocê pode escolher até 4 sabores!")
-
-        # O for roda exatamente 4 vezes (de 1 até 4)
-        for i in range(1, 5):
-            while True:
-                opcao = input(f"Escolha o {i}º sabor (digite o número): ")
-
-                # Verifica se o número digitado existe no cardápio
-                if opcao in cardapio:
-                    sabor_nome = cardapio[opcao]
-                    sabores_escolhidos.append(sabor_nome)
-                    print(f"✅ {sabor_nome} adicionado!")
-                    break # Sai do 'while' e vai para a próxima repetição do 'for'
-                else:
-                    print("❌ Opção inválida! Escolha um número de 1 a 9.")
-
-        return sabores_escolhidos
-
     cardapio = {
         "🍫 TRADICIONAIS" : ["Chocolate", "Ninho", "Prestígio"],
-        "✨ GOURMET" : ["Amendoim" "Crocante", "Mesclado", "Café", "Nesquik"],
+        "✨ GOURMET" : ["Amendoim Crocante", "Mesclado", "Café", "Nesquik"],
         "🍓 FRUTADOS" : ["Maracujá", "Limão"]
     }
 
@@ -62,6 +70,9 @@ def exibir_cardapio_completo():
 
     if resposta == 1:
         limpar_tela()
+        print("OPÇAO ESCOLHIDA -> CARDÁPIO DE MOUSSES")
+        sleep(2)
+        limpar_tela()
         print("=== CARDÁPIO DE MOUSSES ===")
         print("\nDigite a opção desejada:")
 
@@ -69,6 +80,9 @@ def exibir_cardapio_completo():
         resposta = int(input("->"))
 
     elif resposta == 2:
+        limpar_tela()
+        print("OPÇAO ESCOLHIDA -> CARDÁPIO DE BRIGADEIROS")
+        sleep(2)
         limpar_tela()
         print("=== CARDÁPIO DE BRIGADEIROS ===")
         print("\nDigite a opção desejada:")
@@ -78,6 +92,9 @@ def exibir_cardapio_completo():
 
         if resposta == 1:
             limpar_tela()
+            print("OPÇAO ESCOLHIDA -> CAIXINHAS DA FELICIDADE")
+            sleep(2)
+            limpar_tela()
             print("Nossas Caixinhas da felicidade contem 4 unidades, podendo escolher até 4 sabores.")
             sleep(1.5)
             print("Os sabores que temos sao:")
@@ -86,13 +103,16 @@ def exibir_cardapio_completo():
                 for doce in lista_doces:
                     print(f"  • {doce}")
             sleep(2)
-            escolha = input("Podemos prosseguir? [ S / N ]\n->").upper()
-            if escolha == "S":
-                limpar_tela()
-                # Chamando a função
-                meus_sabores = escolha_sabores()
+            while True:
+                escolha = input("Digite S para continuar:\n->").upper()
+                if escolha == "S":
+                    limpar_tela()
+                    # Chamando a função
+                    meus_sabores = escolha_sabores()
 
-                # Exibindo o resultado final
-                print("\n=== RESUMO DAS SUAS 4 ESCOLHAS ===")
-                for sabor in meus_sabores:
-                    print(f"• {sabor}")
+                    # Exibindo o resultado final
+                    print("\n=== RESUMO DAS SUAS 4 ESCOLHAS ===")
+                    for sabor in meus_sabores:
+                        print(f"• {sabor}")
+                else:
+                    print("Opçao Invalida! Tente novamente.")

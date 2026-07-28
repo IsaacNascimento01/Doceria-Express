@@ -105,52 +105,78 @@ def validar_cpf(cpf: str) -> bool:
     #SE PASSAR POR TODAS AS VERIFICAÇÕES, O CPF É VÁLIDO!
     return True
 
+conectar_banco()
+
 print("=== Seja bem vindo(a) a Doceria Express! ===")
 print("Antes de continuar, Precisamos confirmar algumas informações...")
 
 apelido = input("Como podemos lhe chamar? \n")
-opcao = input(f"{apelido} você já possui cadastro? [S/N] \n-> ").upper()
+while True:
+    opcao = input(f"{apelido} você já possui cadastro? [S/N] \n-> ").upper()
 
-if opcao == "N":
-    print("Sem problemas! \nVamos realizar o seu cadastro rapidinho!")
-    sleep(1)
-    print("Só precisamos de algumas informações...")
-    while True:
-        cpf = input("CPF: (APENAS NÚMEROS) \n->")
+    if opcao == "N":
+        print("Sem problemas! \nVamos realizar o seu cadastro rapidinho!")
+        sleep(1)
+        print("Só precisamos de algumas informações...")
+        while True:
+            cpf = input("CPF: (APENAS NÚMEROS) \n->")
+            if validar_cpf(cpf):
+                print('CPF válido!')
+                break
+            else:
+                print("CPF Inválido! Verifique os Dígitos digitados.")
+                sleep(1.5)
+                limpar_tela()
+                print("=== CADASTRO - DOCERIA EXPRESS ===")
+                print(f"Cliente: {apelido}\n")
         if validar_cpf(cpf):
-            print('CPF válido!')
-            break
-        else:
-            print("CPF Inválido! Verifique os Dígitos digitados.")
-            sleep(1.5)
-            limpar_tela()
-            print("=== CADASTRO - DOCERIA EXPRESS ===")
-            print(f"Cliente: {apelido}\n")
-    if validar_cpf(cpf):
-        nome = input("Digite seu nome: ")
-        senha = input("Crie uma senha: ")
-        #Salvar no bando de dados SQLite
-        cadastrar_usuario(cpf, nome, senha)
-    print("Cadastro realizado com sucesso!")
-    sleep(1)
-    print("Agora vamos agora realizar o seu login!")
-    sleep(3)
-    limpar_tela()
-    while True:
-        cpf = input("Digite seu CPF: (APENAS NÚMEROS) \n->")
-        sleep(0.5)
-        senha = input("Digite sua senha: \n->")
-        sleep(0.5)
+            nome = input("Digite seu nome: ")
+            senha = input("Crie uma senha: ")
+            #Salvar no banco de dados SQLite
+            cadastrar_usuario(cpf, nome, senha)
+        sleep(1)
+        print("Agora vamos agora realizar o seu login!")
+        sleep(2)
+        limpar_tela()
 
-        if fazer_login(cpf, senha):
-            print("Carregando Cardápio...")
-            sleep(1.5)
-            limpar_tela()
+        while True:
+            print("=== LOGIN - DOCERIA EXPRESS ===")
+            cpf = input("\nDigite seu CPF: (APENAS NÚMEROS) \n->")
+            sleep(0.5)
+            senha = input("Digite sua senha: \n->")
+            sleep(0.5)
 
-            cardapio.exibir_cardapio_completo()
+            if fazer_login(cpf, senha):
+                print("Carregando Cardápio...")
+                sleep(1.5)
+                limpar_tela()
+                cardapio.exibir_cardapio_completo()
+                break
+            else:
+                print("Usuário e/ou Senha incorretos! Tente novamente.")
+                sleep(1)
+                limpar_tela()
+                break
+    elif opcao == "S":
+        while True:
+            print("=== LOGIN - DOCERIA EXPRESS ===")
+            cpf = input("\nDigite seu CPF: (APENAS NÚMEROS) \n->")
+            sleep(0.5)
+            senha = input("Digite sua senha: \n->")
+            sleep(0.5)
 
-        else:
-            print("Usuário e/ou Senha incorretos! Tente novamente.")
-            sleep(1)
-            limpar_tela()
-            break
+            if fazer_login(cpf, senha):
+                print("Carregando Cardápio...")
+                sleep(1.5)
+                limpar_tela()
+                cardapio.exibir_cardapio_completo()
+                break
+            else:
+                print("Usuário e/ou Senha incorretos! Tente novamente.")
+                sleep(1)
+                limpar_tela()
+    else:
+        print("OPÇAO INVALIDA! TENTE NOVAMENTE.")
+        sleep(2)
+        limpar_tela()
+        print("=== CADASTRO - DOCERIA EXPRESS ===\n")
