@@ -1,10 +1,68 @@
 
 from time import sleep
 import os
+import sqlite3
+import cardapio
 
 def limpar_tela():
     #IDENTIFICA O SISTEMA E LIMPA A TELA
     os.system('cls' if os.name == 'nt' else 'clear')
+
+def conectar_banco():
+
+    conexao = sqlite3.connect("loja.db")
+    cursor = conexao.cursor()
+
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS usuarios(
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            cpf TEXT UNIQUE NOT NULL,
+            nome TEXT NOT NULL,
+            senha TEXT NOT NULL
+        )
+    ''')
+
+    conexao.commit()
+    return conexao
+
+def cadastrar_usuario(cpf, nome, senha):
+    conexao = conectar_banco()
+    cursor = conexao.cursor()
+
+    try:
+        cursor.execute(
+            "INSERT INTO usuarios (cpf, nome, senha) VALUES (?, ?, ?)",
+            (cpf, nome, senha)
+        )
+        conexao.commit()
+        print("\n✅ Cadastro Realizado com Sucesso!")
+        return True
+    except sqlite3.IntegrityError:
+        print("\n❌ ERRO: Esse CPF já está cadastrado no sistema!")
+        return False
+    finally:
+        conexao.close()
+
+def fazer_login(cpf, senha):
+    conexao = conectar_banco()
+    cursor = conexao.cursor()
+
+    #Busca o usuario pelo CPF
+    cursor.execute(
+        "SELECT nome FROM usuarios WHERE cpf = ? AND senha = ?",
+        (cpf, senha)
+    )
+    usuario = cursor.fetchone()
+    conexao.close()
+
+    if usuario:
+        print(f"\n Login Realizado com Sucesso!")
+        sleep(1)
+        print(f"Seja bem vindo(a), {usuario[0]}!")
+        return True
+    else:
+        print(f"CPF ou Senha Incorretos!")
+        return False
 
 def validar_cpf(cpf: str) -> bool:
     #LIMPA O CPF E MANTEM SO NUMEROS
@@ -50,10 +108,10 @@ def validar_cpf(cpf: str) -> bool:
 print("=== Seja bem vindo(a) a Doceria Express! ===")
 print("Antes de continuar, Precisamos confirmar algumas informações...")
 
-nome = input("Como podemos lhe chamar? \n")
-cad = input(f"{nome} você já possui cadastro? [S/N]").upper()
+apelido = input("Como podemos lhe chamar? \n")
+opcao = input(f"{apelido} você já possui cadastro? [S/N] \n-> ").upper()
 
-if cad == "N":
+if opcao == "N":
     print("Sem problemas! \nVamos realizar o seu cadastro rapidinho!")
     sleep(1)
     print("Só precisamos de algumas informações...")
@@ -67,6 +125,32 @@ if cad == "N":
             sleep(1.5)
             limpar_tela()
             print("=== CADASTRO - DOCERIA EXPRESS ===")
-            print(f"Cliente: {nome}\n")
-    nomecpt = input("Nome completo: \n->")
-    nasc = int(input("Ano de nascimento: (AAAA)\n->"))
+            print(f"Cliente: {apelido}\n")
+    if validar_cpf(cpf):
+        nome = input("Digite seu nome: ")
+        senha = input("Crie uma senha: ")
+        #Salvar no bando de dados SQLite
+        cadastrar_usuario(cpf, nome, senha)
+    print("Cadastro realizado com sucesso!")
+    sleep(1)
+    print("Agora vamos agora realizar o seu login!")
+    sleep(3)
+    limpar_tela()
+    while True:
+        cpf = input("Digite seu CPF: (APENAS NÚMEROS) \n->")
+        sleep(0.5)
+        senha = input("Digite sua senha: \n->")
+        sleep(0.5)
+
+        if fazer_login(cpf, senha):
+            print("Carregando Cardápio...")
+            sleep(1.5)
+            limpar_tela()
+
+            cardapio.exibir_cardapio_completo()
+
+        else:
+            print("Usuário e/ou Senha incorretos! Tente novamente.")
+            sleep(1)
+            limpar_tela()
+            break
